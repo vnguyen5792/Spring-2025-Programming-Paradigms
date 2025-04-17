@@ -47,56 +47,67 @@ type World =
 //INTIALIZE WORLD
 //
 
-let key : Item = 
-    { Details = {Name = "A shiny key"
-                 Description = "This key look like it could open a nearby door..."} }
+let rustedKey : Item = 
+    { Details = {Name = "A rusted key"
+                 Description = "Just a key. That's rusted."} }
 
 let allRooms = 
-    [ { Id = RoomId "Entryway"
-        Details = { Name = "The Entryway"; Description = "You stand in a dimly lit entryway. The air is damp, and the flickering candle casts eerie shadows against the stone walls." }
+    [ { Id = RoomId "Field"
+        Details = { Name = "Empty Field"; Description = "You wake up in the middle of a barren field. The blades of bland grass sway from the slight breeze." }
         Items = []
-        Exits = { North = PassableExit ({ Name = "A creaky wooden door"; Description = "A weathered wooden door, slightly ajar, beckons you forward." }, RoomId "Hallway")
-                  South = NoExit (Some { Name = "A solid stone wall"; Description = "There’s no way through here." })
-                  West = NoExit None
-                  East = NoExit None } }
+        Exits = { North = PassableExit ({ Name = "A worn dirt path facing north"; Description = "The dirt path points north towards some houses in the distance..." }, RoomId "DirtRoadNorth")
+                  South = PassableExit ({Name = "A worn dirt path facing south"; Description = "The dirt path points south into the seemingly never ending blades of grass..."}, RoomId "DirtRoadSouth")
+                  West = PassableExit ({ Name = "A worn dirt path facing west"; Description = "The dirt path points west where you can see a... vending machine?" }, RoomId "DirtRoadWest")
+                  East = PassableExit ({Name = "A worn dirt path facing east"; Description = "The dirt path points east. That's it."}, RoomId "DirtRoadEast")
+                } }
 
-      { Id = RoomId "Hallway"
-        Details = { Name = "A Narrow Hallway"; Description = "The hallway stretches into darkness. Dust lingers in the air, disturbed only by your breath." }
-        Items = [{ Details = { Name = "A rusted dagger"; Description = "Its edge is dulled by time, but it still feels balanced in your hand." }}]
-        Exits = { North = PassableExit ({ Name = "A worn archway"; Description = "Beyond the archway, the scent of old parchment fills the air." }, RoomId "Library")
-                  South = PassableExit ({ Name = "A creaky wooden door"; Description = "The same door you passed through earlier." }, RoomId "Entryway")
-                  West = NoExit None
-                  East = NoExit None } }
+      { Id = RoomId "DirtRoadNorth"
+        Details = { Name = "Dusty Road - North"; Description = "The houses ahead seem abandoned, their windows staring back like hollow eyes. A broken fence lines the road, creaking faintly in the wind." }
+        Items = [{ Details = { Name = "A tattered scarf"; Description = "Faded and frayed, it looks like it’s been here a while." }}]
+        Exits = { 
+            South = PassableExit ({ Name = "A worn dirt path leading back to the field"; Description = "You can just make out the place you woke up." }, RoomId "Field")
+            North = LockedExit (
+                  { Name = "A locked wooden door"; Description = "The door to the house is locked, but there’s a rusty keyhole." },
+                  rustedKey,
+                  PassableExit ({ Name = "An open door"; Description = "The door creaks open into the house..." }, RoomId "AbandonedHouse"))
+            East = NoExit None
+            West = NoExit None } }
 
-      { Id = RoomId "Library"
-        Details = { Name = "The Library"; Description = "Rows of ancient books line the towering shelves. A single candle burns atop a reading desk, illuminating a dusty tome left open to an unreadable script." }
-        Items = [{ Details = { Name = "An old book"; Description = "Bound in cracked leather, its pages whisper secrets long forgotten." }}]
-        Exits = { North = PassableExit ({ Name = "A spiral staircase"; Description = "A narrow stairway winds upward, vanishing into the gloom above." }, RoomId "Tower")
-                  South = PassableExit ({ Name = "A worn archway"; Description = "Back to the dim hallway." }, RoomId "Hallway")
-                  West = NoExit None
-                  East = NoExit None } }
-
-      { Id = RoomId "Tower"
-        Details = { Name = "The Tower Chamber"; Description = "A cold wind howls through the shattered windows. The moonlight casts jagged patterns across the stone floor." }
+      { Id = RoomId "DirtRoadSouth"
+        Details = { Name = "Endless Grass"; Description = "The grass stretches endlessly in every direction. You feel like you’re walking in circles." }
         Items = []
-        Exits = { North = NoExit (Some { Name = "A crumbling balcony"; Description = "The ledge is unstable. One wrong step could be your last." })
-                  South = PassableExit ({ Name = "A spiral staircase"; Description = "The narrow stairs descend into the shadows below." }, RoomId "Library")
-                  West = NoExit None
-                  East = PassableExit ({ Name = "A heavy iron door"; Description = "Its surface is engraved with strange symbols, pulsing faintly." }, RoomId "Vault") } }
+        Exits = { 
+            North = PassableExit ({ Name = "A worn dirt path heading back"; Description = "Back to the field where you started." }, RoomId "Field")
+            South = NoExit (Some { Name = "An invisible wall"; Description = "You try to push forward, but something stops you." })
+            East = NoExit None
+            West = NoExit None
+            } }
 
-      { Id = RoomId "Vault"
-        Details = { Name = "The Vault"; Description = "The chamber is lined with chests, each sealed with an unbroken wax sigil. A faint whisper echoes from the shadows." }
-        Items = [{ Details = { Name = "A mysterious amulet"; Description = "An eerie glow pulses from within the gemstone at its center." }}]
-        Exits = { North = NoExit None
-                  South = NoExit None
-                  West = PassableExit ({ Name = "A heavy iron door"; Description = "The symbols upon it still hum with unseen power." }, RoomId "Tower")
-                  East = NoExit None } } ]
+      { Id = RoomId "DirtRoadWest"
+        Details = { Name = "Vending Machine Outpost"; Description = "Sure enough, a lonely vending machine stands buzzing. There’s no power line in sight." }
+        Items = [{ Details = { Name = "A can of soda"; Description = "It’s cold. You don’t know how or why." }}]
+        Exits = { 
+            East = PassableExit ({ Name = "A dirt path back to the field"; Description = "Back the way you came." }, RoomId "Field")
+            North = NoExit None
+            South = NoExit None
+            West = NoExit (Some { Name = "A chain-link fence"; Description = "It rattles ominously when touched, but there’s no gate." })
+            } }
+
+      { Id = RoomId "DirtRoadEast"
+        Details = { Name = "Empty Road East"; Description = "The road seems to go on forever, yet each step feels like you haven’t moved at all." }
+        Items = []
+        Exits = { 
+            West = PassableExit ({ Name = "Path back to the field"; Description = "The central field lies in that direction." }, RoomId "Field")
+            North = NoExit None
+            South = NoExit None
+            East = NoExit (Some { Name = "A shimmering wall of air"; Description = "Looking through it makes your head hurt." })
+            } } ]
 
 let player : Player =
     {
         Details = {Name = "Leon"
                    Description = "An average looking guy with a slightly leaner build."}
-        Location = RoomId "Entryway"
+        Location = RoomId "Field"
         Inventory = []
     }
 
@@ -123,7 +134,62 @@ let describeCurrentRoom world =
     world.Player.Location
     |> getRoom world
     |> (extractDetailsFromRoom >> describeDetails)
+    world
+
+//Functions and DU for moving
+type Direction = North | South | West | East
+
+let rec getDestinationFromExit (exit: Exit) : RoomId option =
+    match exit with
+    | PassableExit (_, dest) -> Some dest
+    | LockedExit (_, _, nextExit) -> getDestinationFromExit nextExit
+    | NoExit _ -> None
+
+let move (direction: Direction) (world: World) : World =
+    match getRoom world world.Player.Location with
+    | None ->
+        printfn "You seem to be lost in a void."
+        world
+
+    | Some currentRoom ->
+        let exit =
+            match direction with
+            | North -> currentRoom.Exits.North
+            | South -> currentRoom.Exits.South
+            | East  -> currentRoom.Exits.East
+            | West  -> currentRoom.Exits.West
+
+        match exit with
+        | PassableExit (details, destination) ->
+            printfn "\n%s\n%s\n" details.Name details.Description
+            { world with Player = { world.Player with Location = destination } }
+
+        | LockedExit (details, key, next) ->
+            let hasKey =
+                world.Player.Inventory
+                |> List.exists (fun item -> item.Details.Name = key.Details.Name)
+
+            if hasKey then
+                match getDestinationFromExit next with
+                | Some destination ->
+                    printfn "You use the %s to unlock the door and pass through..." key.Details.Name
+                    // You can print exit description too if you want here
+                    { world with Player = { world.Player with Location = destination } }
+                | None ->
+                    printfn "You unlocked the door, but it leads nowhere..."
+                    world
+            else
+                printfn "It's locked. You need the %s." key.Details.Name
+                world
+
+        | NoExit detailsOpt ->
+            match detailsOpt with
+            | Some d -> printfn "%s\n%s" d.Name d.Description
+            | None -> printfn "You can’t go that way."
+            world
 
 //start game?
 gameWorld
+|> describeCurrentRoom
+|> move South
 |> describeCurrentRoom
