@@ -15,7 +15,6 @@ is_digesting(X,Y) :- just_ate(X,Y).
 %recursion
 is_digesting(X,Y) :- just_ate(X,Z), is_digesting(Z,Y).
 
-
 %QUESTION 2 - representing a tree in swiprolog
 %node(value, left, right)
 node(2, node(1, nil, nil), node(6, node(4, node(3, nil, nil), node(5, nil, nil)), node(7, nil, nil))).
